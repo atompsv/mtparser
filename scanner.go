@@ -11,12 +11,11 @@ import (
 func New(r *bufio.Reader) Parser {
 	var s Parser
 	s.Init(r)
-	// s.Filename = "mt-message"
 	s.Mode = scanner.ScanIdents
 	s.Whitespace = 1<<'\t' | 1<<'\r'
 	s.IsIdentRune = func(ch rune, i int) bool {
 		switch ch {
-		case '{', '}', ':', '-', '\n', scanner.EOF:
+		case '{', '}', ':', '\n', scanner.EOF:
 			return false
 		}
 		return true
