@@ -24,7 +24,7 @@ func (s *Parser) scanHeader() (err error) {
 	c = s.Scan()
 	switch c {
 	case 'I':
-		max = 21
+		max = 17
 	case 'O':
 		max = 47
 	default:
