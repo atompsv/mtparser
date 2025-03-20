@@ -3,14 +3,24 @@ package mtparser
 import (
 	"bufio"
 	"errors"
+	"io"
 	"strconv"
 	"strings"
 	"text/scanner"
 )
 
-func New(r *bufio.Reader) Parser {
+func New(r *bufio.Reader) (Parser, error) {
+	data, err := io.ReadAll(r)
+	if err != nil {
+		return Parser{}, err
+	}
+	// We remove carriage returns from the data before parsing
+	// because Windows uses \r\n as line endings and we only want \n.
+	clean := strings.ReplaceAll(string(data), "\r", "")
+	newData := bufio.NewReader(strings.NewReader(clean))
+
 	var s Parser
-	s.Init(r)
+	s.Init(newData)
 	s.Mode = scanner.ScanIdents
 	s.Whitespace = 1<<'\t' | 1<<'\r'
 	s.IsIdentRune = func(ch rune, i int) bool {
@@ -22,7 +32,7 @@ func New(r *bufio.Reader) Parser {
 	}
 	s.ErrPrefix = "We could not parse the payment message provided."
 	s.Map = map[string]map[string]Node{}
-	return s
+	return s, nil
 }
 
 func (s *Parser) ErrMessage(c rune, x bool) string {
