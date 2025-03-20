@@ -45,17 +45,6 @@ func (s *Parser) ErrMessage(c rune, x bool) string {
 	return s.ErrPrefix + " " + xp + " '" + string(c) + "' at line " + ln + " column " + cl
 }
 
-// Parse an MT103 string. Return a result
-func ParseFromString(mt103 string) (mtParser Parser, err error) {
-
-	mtReader := strings.NewReader(mt103)
-	mtBufio := bufio.NewReader(mtReader)
-	mtParser = New(mtBufio)
-	err = mtParser.Parse()
-
-	return
-}
-
 func (s *Parser) Parse() error {
 	var err error
 
